@@ -92,7 +92,7 @@ const Auction = () => {
     }
 
     const currentDate = new Date()
-
+    console.log(storeError);
     return (
         <div className={classes.root}>
             {storeAuction &&

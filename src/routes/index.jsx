@@ -5,7 +5,6 @@ import LogIn from '../pages/log-in/logIn';
 import SignUp from '../pages/sign-up/SignUp';
 import Catalog from '../pages/catalog/catalog';
 import Auctions from "../pages/auction/auctions";
-import AuctionBid from "../pages/auction/auctionBid";
 import Product from '../pages/product/product'
 import Basket from '../pages/basket/basket'
 import Auction from "../pages/auction/auction";

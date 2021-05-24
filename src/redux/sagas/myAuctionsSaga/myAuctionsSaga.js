@@ -2,7 +2,6 @@ import axios from "axios";
 import {put, takeEvery} from "redux-saga/effects";
 import { FETCH_MY_AUCTIONS, FETCH_MY_AUCTIONS_SUCCESS, FETCH_MY_AUCTIONS_FAIL, CREATE_AUCTION, CREATE_AUCTION_SUCCESS, CREATE_AUCTION_FAIL} from '../../constants/myAuctions'
 import {BASE_URL} from "../../../constants/constants";
-import {act} from "@testing-library/react";
 
 export function* auctionsSaga() {
     try {

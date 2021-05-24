@@ -1,4 +1,4 @@
-import { ADD_TO_BASKET, REMOVE_FROM_BASKET, ADD_QUANTITY_TO_BASKET} from '../../constants/basket'
+import { ADD_TO_BASKET, REMOVE_FROM_BASKET, ADD_QUANTITY_TO_BASKET, CLEAR_BASKET} from '../../constants/basket'
 
 const initialState = {
     basket: [],
@@ -49,6 +49,10 @@ const basketReducer = (state = initialState, action) => {
             return {
                 basket: newRemovedBasket,
             };
+        case CLEAR_BASKET:
+            return {
+                basket: [],
+            };
         case ADD_QUANTITY_TO_BASKET:
             const newQuantityBasket = state.basket.concat();
             
@@ -60,7 +64,7 @@ const basketReducer = (state = initialState, action) => {
                                })
             return {
                 basket: newQuantityBasket
-            }
+            };
         default:
             return state;
     }

@@ -26,7 +26,8 @@ const auctionReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                auctions: action.payload
+                auctions: action.payload,
+                error: ''
             }
         case GET_ALL_AUCTION_FAILED:
             console.log('auctionReducer failed')
@@ -50,6 +51,7 @@ const auctionReducer = (state = initialState, action) => {
                 ...state,
                 loading: false,
                 auction: action.payload,
+                error: ""
             };
         case GET_ONE_AUCTION_FAILED:
             return {

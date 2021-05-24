@@ -5,7 +5,6 @@ import {PRODUCTS_REQ, PRODUCTS_REQ_SUCCESS, PRODUCTS_REQ_FAIL} from '../../const
 export function* getProductsSaga(action) {
     try {
         const products = yield axios.get('https://afternoon-waters-64991.herokuapp.com/api/products').then(products => products)
-        console.log(products.data);
 
         yield put({
             type: PRODUCTS_REQ_SUCCESS,

@@ -1,7 +1,7 @@
 import { AppBar, Toolbar } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { ShoppingBasketOutlined } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) =>
@@ -12,7 +12,10 @@ const useStyles = makeStyles((theme) =>
 			textDecoration: 'none',
 			fontSize: 17,
 			display: 'flex',
-			alignItems: 'center'
+			alignItems: 'center',
+			'&:hover': {
+                cursor: "pointer",
+             },
 		},
 		label: {
 			fontSize: 20,
@@ -58,15 +61,48 @@ const useStyles = makeStyles((theme) =>
 export default function Nav() {
 	const classes = useStyles();
 	const basket = useSelector((store) => store.basket.basket);
-
+	const history = useHistory();
 	function calculateBasketQuantity(basket){
 		const quantity = basket.reduce(function (accumulator, product) {
 			return accumulator + product.quantity;
 		}, 0);
 
-		console.log(quantity);
 
 		return quantity ? <span className={classes.basketQuantity}>{quantity}</span> : null
+	}
+
+	function rightNavRoutes(token){
+		return token ? 
+		<>
+			<NavLink to="/my-products" activeClassName={classes.activeMenuLink} className={classes.menuLink}>
+				Мои продукты
+			</NavLink>
+			<NavLink to="/my-orders" activeClassName={classes.activeMenuLink} className={classes.menuLink}>
+				Мои покупки
+			</NavLink>
+			<NavLink to="/my-auctions" activeClassName={classes.activeMenuLink} className={classes.menuLink}>
+				Мои аукционы
+			</NavLink> 
+			<NavLink to="/my-profile" activeClassName={classes.activeMenuLink} className={classes.menuLink}>
+				Профиль
+			</NavLink> 
+			<span className={classes.menuLink} onClick={() => {
+				 localStorage.removeItem('token')
+				 history.push('/log-in')
+			}}>
+				Выйти
+			</span> 
+		</>
+		: 
+		<>
+			<NavLink to="/log-in" activeClassName={classes.activeMenuLink} className={classes.menuLink}>
+			Логин
+			</NavLink>
+			<NavLink to="/sign-up" activeClassName={classes.activeMenuLink} className={classes.menuLink}>
+				Регистрация
+			</NavLink>
+		</>
+	
 	}
 
 	return (
@@ -99,12 +135,7 @@ export default function Nav() {
 					
 				</div>
 				<div className={classes.navRight}>
-					<NavLink to="/log-in" activeClassName={classes.activeMenuLink} className={classes.menuLink}>
-						Логин
-					</NavLink>
-					<NavLink to="/sign-up" activeClassName={classes.activeMenuLink} className={classes.menuLink}>
-						Регистрация
-					</NavLink>
+					{rightNavRoutes(localStorage.getItem('token'))}
 				</div>
 			</Toolbar>
 		</AppBar>

@@ -3,7 +3,8 @@ import {SIGN_UP_REQ, SIGN_UP_SUCCESS, SIGN_UP_FAIL, LOG_IN_REQ, LOG_IN_SUCCESS,L
 const initialState = {
     authToken: '',
     user: {},
-    error: '',
+    errorLogIn: '',
+    errorSignUp: '',
     loading: false
 };
 
@@ -17,12 +18,13 @@ const registrationReducer = (state = initialState, action) => {
             
             return {
                 loading: false,
-                authToken: action.payload
+                authToken: action.payload,
+                errorSignUp: ''
             }
         case SIGN_UP_FAIL:
             return {
                 loading: false,
-                error: action.payload
+                errorSignUp: action.payload
             }
         case LOG_IN_REQ:
             return {
@@ -31,12 +33,13 @@ const registrationReducer = (state = initialState, action) => {
         case LOG_IN_SUCCESS:
             return {
                 loading: false,
-                authToken: action.payload
+                authToken: action.payload,
+                errorLogIn: ''
             }
         case LOG_IN_FAIL:
             return {
                 loading: false,
-                error: action.payload
+                errorLogIn: action.payload
             }
         default:
             return state;

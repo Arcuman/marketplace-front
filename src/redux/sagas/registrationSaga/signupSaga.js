@@ -15,6 +15,8 @@ export function* signUpSaga(action) {
             payload: res.data.access_token
         })
 
+        action.payload.clearForm();
+
         action.payload.history.push("/catalog")
 
     } catch (e) {

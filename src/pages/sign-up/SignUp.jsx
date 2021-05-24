@@ -35,7 +35,14 @@ const useStyles = makeStyles((theme) =>
 			marginTop: '20px',
 			width: '100%',
 			padding: '5px'
-		}
+		},
+		       error: {
+            width: '100%',
+        },
+        errorText: {
+            color: 'red',
+            fontSize: '16px'
+        }
 	})
 );
 
@@ -43,13 +50,22 @@ export default function SignUp() {
 	const classes = useStyles();
 	const history = useHistory();
 	const dispatch = useDispatch();
-	const authStoreError = useSelector((store) => store.auth.error);
+	const authStoreError = useSelector((store) => store.auth.errorSignUp);
 	const [formValue, setFormValue] = useState({
 		name: '',
 		email: '',
 		phone: '',
 		password: ''
 	})
+
+	function clearForm(){
+		setFormValue({
+			name: '',
+			email: '',
+			phone: '',
+			password: ''
+		})
+	}
 
 	const onChange = (e) => {
 		setFormValue((prev) => {
@@ -64,14 +80,7 @@ export default function SignUp() {
 	const onSubmit = (e) => {
 		e.preventDefault();
 		console.log(formValue);
-		dispatch(signUpReq({formValue, history}));
-
-		setFormValue({
-			name: '',
-			email: '',
-			phone: '',
-			password: ''
-		})
+		dispatch(signUpReq({formValue, history, clearForm}));
 	};
 	// pattern="+375([0-9]{2})[0-9]{3}-[0-9]{2}-[0-9]{2}"
 	return (
@@ -100,10 +109,18 @@ export default function SignUp() {
 						onChange={onChange}
 						required
 					/>
-					{authStoreError && <span style={{color: 'red'}}>{authStoreError}</span>}
 					<Button type="submit" variant="contained" color="primary" className={classes.submitButton}>
 						Отправить
 					</Button>
+					<div className={classes.error}>
+						<ul>
+							{authStoreError &&
+							(Array.isArray(authStoreError) ? authStoreError.map(err => <li key={err}
+																		 className={classes.errorText}>{err}</li>) :
+								<li className={classes.errorText}>{authStoreError}</li>)
+							}
+						</ul>
+                	</div>
 				</form>
 			</div>
 		</div>

@@ -42,7 +42,7 @@ export default function SignUp() {
 	const classes = useStyles();
 	const history = useHistory();
 	const dispatch = useDispatch();
-	const authStoreError = useSelector((store) => store.auth.error);
+	const authStoreError = useSelector((store) => store.auth.errorLogIn);
 	const [formValue, setFormValue] = useState({
 		email: '',
 		password: ''
@@ -58,16 +58,17 @@ export default function SignUp() {
 		
 	}
 
-	const onSubmit = (e) => {
-		e.preventDefault();
-		console.log(formValue);
-		dispatch(logInReq({formValue, history}));
+	const clearForm = () => {
 		setFormValue({
-			name: '',
 			email: '',
-			phone: '',
 			password: ''
 		})
+	}	
+
+	const onSubmit = (e) => {
+		e.preventDefault();
+		dispatch(logInReq({formValue, history, clearForm}));
+
 	};
 
 	return (

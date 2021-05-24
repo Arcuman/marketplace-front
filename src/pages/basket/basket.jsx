@@ -3,13 +3,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addQuantityToBasket, removeFromBasket } from '../../redux/actions/basketAction';
 import { createStyles, makeStyles, Button } from '@material-ui/core';
 import { useEffect, useState } from 'react';
+import BasketCheckout from '../../components/basket-checkout/basketCheckout'
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) =>
 	createStyles({
+        root:{
+            width: "100%",
+            padding: '30px',
+            boxSizing: 'border-box',
+            display: 'flex', 
+            justifyContent: 'space-between'
+        },
         card:{
-            width: '80%',
+            width: '50%',
             padding: '40px',
-            margin: '10px auto',
             boxSizing: 'border-box',
             boxShadow: '0px 10px 8px 0px rgba(50, 50, 50, 0.25)',
             backgroundColor: 'rgba(50, 50, 50, 0.05)',
@@ -17,7 +25,6 @@ const useStyles = makeStyles((theme) =>
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'flex-start',
-            marginBottom: '20px'
         },
         cardTitle: {
 
@@ -91,7 +98,8 @@ const useStyles = makeStyles((theme) =>
         },
         cardFooterTotal: {
             fontSize: '16px',
-            fontWeight: 600
+            fontWeight: 600,
+            whiteSpace: 'nowrap'
         },
         cardFooterButtons: {
             marginLeft: '10px',
@@ -106,24 +114,37 @@ const useStyles = makeStyles((theme) =>
 );
 
 export default function Bakset(){
+    const history = useHistory();
     const classes = useStyles();
     const dispatch = useDispatch();
     const [total, setTotal] = useState(0);
+    const [totalQuantity, setTotalQuantity] = useState(0);
+    const [isShowCheckout, setIsShowCheckout] =  useState(false);
     const basket = useSelector((store) => store.basket.basket);
 
     useEffect(() => {
-        if(basket){
+        if(basket.length){
             const totalPrice = basket.reduce(function (accumulator, product) {
                 return accumulator + product.cost;
             }, 0);
+
+            const totalQuantity = basket.reduce(function (accumulator, product) {
+                return accumulator + product.quantity;
+            }, 0);
     
             setTotal(totalPrice);
+            setTotalQuantity(totalQuantity);
         }
 
-        if(!basket){
+        if(!basket.length){
+            setIsShowCheckout(false);
             setTotal(0);
         }
-    }, [basket])
+    }, [basket]);
+
+    function toggleShowCheckout(){
+        setIsShowCheckout(!isShowCheckout);
+    }
 
     function onChangProductQuantity(e, product){
         dispatch(addQuantityToBasket(product, Number(e.target.value)));
@@ -134,24 +155,24 @@ export default function Bakset(){
     }
 
     return (
-        <div>
+        <div className={classes.root}>
             <div className={classes.card}>
                 <h3>Магазин покупок</h3>
                 <div className={classes.cardItemsContainer}>
-                {basket && basket.map(product => (
+                {basket.map(product => (
                     <div key={product.id} className={classes.cardItem}>
-                        <div>
+                        <div style={{display: 'flex'}}>
                             <img className={classes.cardItemImg} src={`http://afternoon-waters-64991.herokuapp.com/${product.photo}`} alt=''/>
                             <div className={classes.cardItemInfo}>
                                 <span className={classes.cardItemInfoBlue}>{product.name}</span>
                                 <div style={{display: 'flex', flexDirection: 'column'}}>
                                     <span className={classes.cardItemInfoText}>$ {product.price}</span>
-                                    <span className={classes.cardItemInfoText}>Shop: asmnd</span>
+                                    <span className={classes.cardItemInfoText}>Магазин: asmnd</span>
                                 </div>
                                 <div>
-                                    <span className={classes.cardItemInfoText}>Quantity:</span>
+                                    <span className={classes.cardItemInfoText}>Количество:</span>
                                     <input className={classes.cardItemInfoInput} min='1' type='number' value={product.quantity} onChange={(e) => onChangProductQuantity(e, product)}/>
-                                    <span className={`${classes.cardItemInfoBlue} ${classes.cardInfoRemove}`} onClick={() => removeFromStoreBasket(product.id)}>X REMOVE</span>
+                                    <span className={`${classes.cardItemInfoBlue} ${classes.cardInfoRemove}`} onClick={() => removeFromStoreBasket(product.id)}>X УДАЛИТЬ</span>
                                 </div>
                             </div>
                         </div>
@@ -160,17 +181,24 @@ export default function Bakset(){
                 ))}
                 </div>
                 <div className={classes.cardFooter}>
-                    <span className={classes.cardFooterTotal}>Total: ${total}</span>
+                   <div style={{display: 'flex', flexDirection: 'column'}}>
+                    <span className={classes.cardFooterTotal}>Общая сумма: ${total}</span>
+                    <span className={classes.cardFooterTotal}>Общее количество: {totalQuantity}</span>
+                   </div>
                     <div className={classes.cardFooterButtons}>
-                        <Button variant="contained" color="secondary" className={classes.cardFooterButton}>
-                            checkout
-                        </Button>
-                        <Button variant="contained">
-                            Continue shopping
+                        {localStorage.getItem('token') && (!isShowCheckout && ( <Button variant="contained" color="secondary" disabled={!basket || !basket.length} onClick={toggleShowCheckout} className={classes.cardFooterButton}>
+                            Покупка
+                        </Button>))}
+                        {!localStorage.getItem('token') && <Button variant="contained" color="secondary" onClick={() => history.push('log-in')} className={classes.cardFooterButton}>
+                            Авторизироваться для покупки
+                        </Button>}
+                        <Button variant="contained" onClick={() => history.push('/catalog')}>
+                            Продолжить покупки
                         </Button>
                     </div>
                 </div>
             </div>
+            {isShowCheckout && <BasketCheckout toggleShowCheckout={toggleShowCheckout}/>}
         </div>
     )
 }

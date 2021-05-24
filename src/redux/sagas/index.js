@@ -5,6 +5,10 @@ import getAllSaga from "./auctionSaga/getAllSaga";
 import getProductsSaga from "./productSagas/getProdutctsSaga";
 import getProductSaga from "./productSagas/getProdutctSaga";
 import getOneSaga from "./auctionSaga/getOneSaga";
+import ordersSaga from "./ordersSaga/ordersSaga";
+import productsSaga from "./productsSaga/productsSaga";
+import profileSaga from "./profileSaga/profileSaga";
+import myAuctionsSaga from "./myAuctionsSaga/myAuctionsSaga";
 
 export default function* rootSaga() {
     yield all([
@@ -13,6 +17,10 @@ export default function* rootSaga() {
         getAllSaga(),
         getOneSaga(),
         getProductsSaga(),
-        getProductSaga()
+        getProductSaga(),
+        ordersSaga(),
+        productsSaga(),
+        profileSaga(),
+        myAuctionsSaga()
     ]);
 }

@@ -8,13 +8,15 @@ export function* signInSaga(action) {
             password: action.payload.formValue.password,
             username: action.payload.formValue.email
         }).then(res => res)
-        console.log(res);
+        
         localStorage.setItem('token', res.data.access_token);
 
         yield put({
             type: LOG_IN_SUCCESS,
             payload: res.data.access_token
         })
+
+        action.payload.clearForm();
 
         action.payload.history.push("/catalog")
 

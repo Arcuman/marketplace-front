@@ -2,11 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {auctionReq, auctionClear, auctionAddBid} from "../../redux/actions/auctionsAction";
 import {useParams} from "react-router";
-import {Card, CardHeader, CardMedia, Grid, Link, Typography} from "@material-ui/core";
+import {Card, CardHeader, CardMedia, Grid, Typography} from "@material-ui/core";
 import {BASE_URL} from "../../constants/constants";
 import Timer from "./Timer";
 import {makeStyles} from "@material-ui/core/styles";
 import AuctionBid from "./auctionBid";
+import {NavLink} from "react-router-dom";
 
 
 const useStyles = makeStyles(theme => ({
@@ -69,7 +70,7 @@ const Auction = () => {
     const dispatch = useDispatch();
     const [justEnded, setJustEnded] = useState(false);
     const storeAuction = useSelector((store) => store.auctions.auction);
-    const storeError = useSelector((store) => store.auctions.error);
+    // const storeError = useSelector((store) => store.auctions.error);
 
     useEffect(() => {
         console.log(storeAuction)
@@ -92,7 +93,6 @@ const Auction = () => {
     }
 
     const currentDate = new Date()
-    console.log(storeError);
     return (
         <div className={classes.root}>
             {storeAuction &&
@@ -128,7 +128,7 @@ const Auction = () => {
                                 </Typography>
                                 }
                                 {!localStorage.getItem('token') &&
-                                <Typography>Пожалуйста, <Link to='/login'>авторизируйтесь</Link> для ставки.</Typography>}
+                                <Typography>Пожалуйста, <NavLink to='/log-in'>авторизируйтесь</NavLink> для ставки.</Typography>}
                                 {localStorage.getItem('token') &&
                                 <AuctionBid auction={storeAuction} justEnded={justEnded} updateBids={updateBids}/>}
                             </>)

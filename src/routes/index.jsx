@@ -8,6 +8,13 @@ import Auctions from "../pages/auction/auctions";
 import Product from '../pages/product/product'
 import Basket from '../pages/basket/basket'
 import Auction from "../pages/auction/auction";
+import Products from "../pages/products/products";
+import NewProduct from "../pages/new-product/new-product";
+import Orders from "../pages/orders/orders"
+import Profile from '../pages/profile/profile'
+import OrderDetails from '../pages/order-details/order-details'
+import MyAuctions from '../pages/my-auctions/my-auctions'
+import NewAuction from '../pages/new-auction/new-auction'
 
 export default function RootRouter() {
 	return (
@@ -23,6 +30,13 @@ export default function RootRouter() {
 				<Route component={Catalog} path='/catalog' exact/>
 				<Route component={Product} path='/product/:id' exact/>
 				<Route component={Basket} path='/basket'/>
+				<Route component={Products} path='/my-products'/>
+				<Route component={NewProduct} path='/new-product'/>
+				<Route component={Orders} path='/my-orders'/>
+				<Route component={Profile} path='/my-profile'/>
+				<Route component={OrderDetails} path='/order-details/:id'/>
+				<Route component={MyAuctions} path='/my-auctions'/>
+                <Route component={NewAuction} path='/new-auction'/>
 
                 <Route exact path="/" render={() => (
                     <Redirect to="/catalog"/>

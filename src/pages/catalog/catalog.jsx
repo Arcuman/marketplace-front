@@ -1,21 +1,36 @@
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { productsReq } from '../../redux/actions/productAction';
 import { addToBasket } from '../../redux/actions/basketAction';
-import { createStyles, makeStyles } from '@material-ui/core';
+import { createStyles, Input, makeStyles } from '@material-ui/core';
 import { ShoppingBasketOutlined } from '@material-ui/icons';
 import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) =>
 	createStyles({
-        root: {
+        mainRoot: {
             width: '95%',
             margin: '0 auto',
+            marginTop: '20px',
+        },
+        searchContainer: {
+            width: '100%',
+            height: '100px',
+            padding: '20px',
+            boxSizing: 'border-box',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            boxShadow: '0px 10px 8px 0px rgba(50, 50, 50, 0.15)',
+            backgroundColor: '#e6e6fa'
+        },
+        root: {
+            width: '100%',
             boxShadow: '0px 10px 8px 0px rgba(50, 50, 50, 0.3)',
             position: 'relative',
             display: 'flex',
             flexWrap: 'wrap',
-            
+            marginTop: '20px'
         },
         productCard: {
             width: '300px',
@@ -68,6 +83,11 @@ const useStyles = makeStyles((theme) =>
         bottomLineText: {
             color: '#ffffff'
         },
+        input: {
+            width: '30%',
+            padding: '5px',
+            height: '40px'
+        }
     })
 )
 
@@ -75,16 +95,15 @@ export default function Catalog(){
     const classes = useStyles();
     const dispatch = useDispatch();
     const products = useSelector((store) => store.products.products);
+    const [localProducts, setLocalProducts] = useState(null);
     const history = useHistory();
 
     useEffect(() => {
-        if(!products){
-            dispatch(productsReq());
-        }
+        dispatch(productsReq());
     }, [dispatch, products])
 
     useEffect(() => {
-        console.log(products)
+        setLocalProducts(products);
     }, [products])
 
     function addProductToBasket(e,product){
@@ -92,10 +111,33 @@ export default function Catalog(){
         dispatch(addToBasket(product));
     }
 
+    function searchProduct(e){
+        if(e.target.value){
+            const newProducts = localProducts.filter(product => {
+                if(product.name.startsWith(e.target.value)){
+                    return true;
+                } else {
+                    return false;
+                }
+            })
+    
+            setLocalProducts(newProducts)
+        } 
+        if(!e.target.value){
+            setLocalProducts(products);
+        }
+
+    }
+
     return (
-        <div className={classes.root}>
-            {!products && <h1>Loading...</h1>}
-            {products && products.map(product => 
+        <div  className={classes.mainRoot}>
+            <div  className={classes.searchContainer}>
+                <Input className={classes.input} onChange={searchProduct} type='text' placeholder="Найти продукты"/>
+            </div>
+            <div className={classes.root}>
+            {!localProducts && <h1 style={{margin: '40px'}}>Загрузка...</h1>}
+            {localProducts && !localProducts.length && <h1 style={{margin: '40px'}}>Нету продуктов</h1> }
+            {localProducts && localProducts.map(product => 
                 <div className={classes.productCard}  key={product.id} onClick={() => history.push(`/product/${product.id}`)}>
                     <img className={classes.productImg} src={`http://afternoon-waters-64991.herokuapp.com/${product.photo}`} alt='cardPhoto'/>
                     <div className={classes.bottomLine}>
@@ -107,6 +149,7 @@ export default function Catalog(){
                     </div>
                 </div>
             )}
+        </div>
         </div>
 
     )

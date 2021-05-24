@@ -62,15 +62,14 @@ const useStyles = makeStyles((theme) =>
             maxWidth: '50%'
         },
         cardBottomPrice: {
-            width: '40px',
-            height: '40px',
             backgroundColor: 'rgba(0,0,0, 0.3)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center'
         },
         cardBottomPriceText: {
-            fontSize: '18px'
+            fontSize: '18px',
+            padding: '10px'
         }
     })
 )
@@ -100,7 +99,7 @@ export default function Product(){
     return (
         <div>
             {!storeProduct && (
-             <div className={classes.loading}><h1>Loading...</h1></div>
+             <div className={classes.loading}><h1>Загрузка...</h1></div>
             )}
             {storeProduct && (
                 <div className={classes.root}>

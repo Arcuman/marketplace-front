@@ -18,6 +18,5 @@ export function updateProfile(formData, history, clearForm){
         payload: {
             formData, history, clearForm
         }
-
     }
 }

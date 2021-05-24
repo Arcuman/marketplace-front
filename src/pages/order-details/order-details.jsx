@@ -1,10 +1,11 @@
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router"
-import {createStyles, makeStyles} from '@material-ui/core';
-import {useEffect} from "react";
-import {fetchOrder} from "../../redux/actions/ordersActions";
+import {createStyles, IconButton, makeStyles, MenuItem, Select} from '@material-ui/core';
+import {useEffect, useState} from "react";
+import {fetchOrder, updateOrder} from "../../redux/actions/ordersActions";
 import {fetchProfile} from "../../redux/actions/profileAction";
 import {BASE_URL} from "../../constants/constants";
+import EditIcon from "@material-ui/icons/Edit";
 
 const useStyles = makeStyles((theme) =>
     createStyles({
@@ -110,6 +111,10 @@ const useStyles = makeStyles((theme) =>
             fontWeight: 500,
             color: 'blue',
             fontSize: '17px'
+        },
+        cardItemButtonsEdit: {
+            color: 'blue',
+            marginRight: '10px'
         }
     })
 )
@@ -120,6 +125,7 @@ export default function OrderDetails() {
     const dispatch = useDispatch();
     const order = useSelector((store) => store.orders.order);
     const user = useSelector((store) => store.profile.profileData);
+    const [displayedItems, setDisplayedItems] = useState(null)
 
     useEffect(() => {
         dispatch(fetchOrder(params.id))
@@ -131,6 +137,76 @@ export default function OrderDetails() {
         console.log(user);
     }, [order, user])
 
+    useEffect(() => {
+        if (!order) {
+            return
+        }
+        const displayedItems = order.orderItems.map((item) => {
+            return {...item, editData: false, status: item.orderStatus}
+        });
+        setDisplayedItems(displayedItems);
+    }, [order])
+
+    const onEditClick = (orderItem) => {
+        let item = null;
+        const newDisplayedOrder = displayedItems.map(localItem => {
+            if (localItem.id === orderItem.id) {
+                item = localItem.editData ? localItem : null;
+                if (item) {
+                    item.orderStatus = localItem.status;
+                }
+                localItem.editData = !localItem.editData;
+            }
+            return localItem
+        })
+        if (item) {
+            item.orderId = order.id;
+            return dispatch(updateOrder(item, afterUpdate))
+        }
+        setDisplayedItems(newDisplayedOrder)
+    }
+
+    const printStatus = (status) => {
+        switch (status) {
+            case 'Pending':
+                return 'В процессе';
+            case 'Complete':
+                return 'Закончен';
+            case 'Failed':
+                return 'Отменен';
+            case 'Shipped':
+                return 'Отправлен';
+            case 'Delivered':
+                return 'Прибыл';
+            case 'Success':
+                return 'Оплачен';
+            default :
+                return 'Неопределенно';
+        }
+    }
+
+    const handleChange = (event, orderItem) => {
+        const newDisplayedOrder = displayedItems.map(localItem => {
+            if (localItem.id === orderItem.id) {
+                localItem.status = event.target.value;
+            }
+            return localItem
+        })
+        setDisplayedItems(newDisplayedOrder)
+    };
+
+    function afterUpdate() {
+        console.log('ACTIVE UPDATE')
+        if (!order) {
+            return
+        }
+        console.log(order)
+        const displayedItems = order.orderItems.map((item) => {
+            return {...item, editData: false}
+        });
+        setDisplayedItems(displayedItems);
+    }
+
     return (
         <div>
             {order &&
@@ -138,12 +214,12 @@ export default function OrderDetails() {
                 <div className={classes.rootHeader}>
                     <h3>Детали заказа</h3>
                     <span className={classes.textGray}>Код заказа: {order.id}</span>
-                    <span className={classes.textGray}>Статус транзакции: {order.transactionStatus}</span>
+                    <span className={classes.textGray}>Статус транзакции: {printStatus(order.transactionStatus)}</span>
                 </div>
                 < div className={classes.rootContent}>
                     <div className={classes.ordersRoot}>
                         <div className={classes.orderItems}>
-                            {order?.orderItems && order?.orderItems.map(orderItem => (
+                            {displayedItems && displayedItems.map(orderItem => (
                                 <div key={orderItem.id} className={classes.orderItem}>
                                     <div className={classes.orderItemLeft}>
                                         <img className={classes.orderItemImg}
@@ -152,13 +228,46 @@ export default function OrderDetails() {
                                         <div className={classes.orderItemInfo}>
                                             <span className={classes.textBlue}>{orderItem.product.name}</span>
                                             <span style={{marginTop: "20px"}}
-                                                  className={classes.textGray}>$ {orderItem.product.price} x ${orderItem.quantity}</span>
-                                            <span className={classes.textGray}>Статус: {orderItem.orderStatus}</span>
+                                                  className={classes.textGray}>$ {orderItem.product.price} x {orderItem.quantity}</span>
+                                            <span className={classes.textGray}>Статус:
+                                                {
+                                                    !orderItem.editData && <span>
+                                                {printStatus(orderItem.status)}
+                                                    </span>
+                                                }
+                                                {
+                                                    orderItem.editData && <div>
+                                                        <Select
+                                                            labelId="demo-simple-select-label"
+                                                            id="demo-simple-select"
+                                                            value={orderItem.status}
+                                                            onChange={(e) => handleChange(e, orderItem)}
+                                                        >
+                                                            <MenuItem value={'Pending'}>В процессе</MenuItem>
+                                                            <MenuItem value={'Complete'}>Подтвержден</MenuItem>
+                                                            <MenuItem value={'Failed'}>Отклонен</MenuItem>
+                                                        </Select>
+                                                    </div>
+                                                }
+                                            </span>
+
                                         </div>
                                     </div>
-                                    <span className={classes.textGray}>
+                                    <div>
+                                        <span className={classes.textGray}>
                 $ {orderItem.price}
                 </span>
+                                        <div>
+                                            {orderItem.orderStatus === 'Pending' && order.transactionStatus === 'Success' &&
+                                            <div onClick={() => onEditClick(orderItem)}
+                                                 className={classes.cardItemButtons}>
+                                                <IconButton aria-label="Edit" color="primary">
+                                                    <EditIcon/>
+                                                </IconButton>
+                                            </div>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
                             ))}
                         </div>

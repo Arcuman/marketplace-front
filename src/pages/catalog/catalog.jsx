@@ -99,8 +99,10 @@ export default function Catalog(){
     const history = useHistory();
 
     useEffect(() => {
-        dispatch(productsReq());
-    }, [dispatch, products])
+        if(!localProducts || localProducts.length === 0){
+            dispatch(productsReq());
+        }
+    }, [dispatch, products, localProducts])
 
     useEffect(() => {
         setLocalProducts(products);
@@ -108,19 +110,27 @@ export default function Catalog(){
 
     function addProductToBasket(e,product){
         e.stopPropagation();
+        if(product.quantity < 1)
+            return
+        const newProducts = localProducts.map(localProduct => {
+            if (localProduct.id === product.id){
+                localProduct.quantity--;
+            }
+            return localProduct
+        })
+        setLocalProducts(newProducts)
         dispatch(addToBasket(product));
     }
 
     function searchProduct(e){
         if(e.target.value){
-            const newProducts = localProducts.filter(product => {
-                if(product.name.startsWith(e.target.value)){
+            const newProducts = products.filter(product => {
+                if (product.name.startsWith(e.target.value)){
                     return true;
                 } else {
                     return false;
                 }
             })
-    
             setLocalProducts(newProducts)
         } 
         if(!e.target.value){
@@ -144,6 +154,7 @@ export default function Catalog(){
                         <div className={classes.bottomLineInfo}>
                             <span className={classes.bottomLineText}>{product.name}</span>
                             <span className={classes.bottomLineText}>$ {product.price}</span>
+                            <span className={classes.bottomLineText}>Кол-во: {product.quantity}</span>
                         </div>
                         <ShoppingBasketOutlined onClick={(e) => addProductToBasket(e, product)}  className={classes.bottomLineBasket}/>
                     </div>

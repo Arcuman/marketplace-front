@@ -1,14 +1,14 @@
-import { Button, Input } from '@material-ui/core';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
+import {Button, Input} from '@material-ui/core';
+import {createStyles, makeStyles} from '@material-ui/core/styles';
+import {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {useHistory} from 'react-router';
 import {clearProfilError, fetchProfile, updateProfile} from '../../redux/actions/profileAction'
 import EditIcon from '@material-ui/icons/Edit';
-import { BASE_URL } from '../../constants/constants';
+import {BASE_URL} from '../../constants/constants';
 
 const useStyles = makeStyles((theme) =>
-	createStyles({
+    createStyles({
         root: {
             width: '40%',
             boxShadow: '0px 10px 8px 0px rgba(50, 50, 50, 0.1)',
@@ -19,9 +19,7 @@ const useStyles = makeStyles((theme) =>
             margin: '0 auto',
             position: 'relative'
         },
-        title: {
-
-        },
+        title: {},
         info: {
             display: 'flex',
             flexDirection: 'column',
@@ -35,7 +33,7 @@ const useStyles = makeStyles((theme) =>
             marginTop: '20px'
         },
         cardItemButtonsEdit: {
-            color: 'blue', 
+            color: 'blue',
             position: 'absolute',
             top: '20px',
             right: '15px',
@@ -44,7 +42,7 @@ const useStyles = makeStyles((theme) =>
             }
         },
         cardItemButtonsCloseEdit: {
-            color: 'red', 
+            color: 'red',
             position: 'absolute',
             top: '20px',
             right: '25px',
@@ -68,7 +66,7 @@ const useStyles = makeStyles((theme) =>
             top: '0',
             zIndex: 1,
         },
-        imgPreview:{
+        imgPreview: {
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -125,7 +123,7 @@ const useStyles = makeStyles((theme) =>
     })
 )
 
-export default function Profile(){
+export default function Profile() {
     const classes = useStyles();
     const dispatch = useDispatch();
     const [isEdit, setIsEdit] = useState(false);
@@ -145,7 +143,7 @@ export default function Profile(){
     })
 
     const imageHandler = (e) => {
-		if(e.target.files[0]){
+        if (e.target.files[0]) {
             let reader = new FileReader();
             let newFile = e.target.files[0];
             reader.readAsDataURL(newFile);
@@ -156,29 +154,27 @@ export default function Profile(){
                     imagePreview: reader.result
                 })
             };
-        }
-
-        else {
+        } else {
             removeImage();
         }
-	};
+    };
 
     const removeImage = (e) => {
-		e.stopPropagation();
-		e.preventDefault();
+        e.stopPropagation();
+        e.preventDefault();
 
-		setImg({
-			image: null,
-			imagePreview: null
-		});
-	};
+        setImg({
+            image: null,
+            imagePreview: null
+        });
+    };
 
     const onSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
 
         const newProduct = {
-            ...formValue, photo : img.image
+            ...formValue, photo: img.image
         }
 
         for (const key in newProduct) {
@@ -188,22 +184,22 @@ export default function Profile(){
 
         dispatch(updateProfile(formData, clearForm, setIsEdit));
     }
-    
-    const onChange = (e) => {
-		setFormValue((prev) => {
-			return {
-				...prev,
-				[e.target.name]: e.target.value
-			}
-		})
-	}
 
-    function toggleIsEdit(){
+    const onChange = (e) => {
+        setFormValue((prev) => {
+            return {
+                ...prev,
+                [e.target.name]: e.target.value
+            }
+        })
+    }
+
+    function toggleIsEdit() {
         setIsEdit(!isEdit);
         dispatch(clearProfilError());
     }
 
-    function clearForm(){
+    function clearForm() {
         setFormValue({
             name: profileData.name,
             email: profileData.email,
@@ -213,7 +209,7 @@ export default function Profile(){
             image: {
                 name: profileData?.photo.split('/')[1]
             },
-            imagePreview:  `${BASE_URL}${profileData?.photo}`
+            imagePreview: `${BASE_URL}${profileData?.photo}`
         })
         toggleIsEdit();
     }
@@ -231,77 +227,92 @@ export default function Profile(){
             email: profileData?.email,
             phone: profileData?.phone,
         })
-
-        setImg({
-            image: {
-                name: profileData?.photo.split('/')[1]
-            },
-            imagePreview: `${BASE_URL}${profileData?.photo}`
-        })
+        if (profileData && profileData.photo) {
+            console.log({photo: profileData.photo})
+            setImg({
+                image: {
+                    name: profileData?.photo.split('/')[1]
+                },
+                imagePreview: `${BASE_URL}${profileData?.photo}`
+            })
+        }
+        else {
+            console.log('here')
+            setImg({
+                image: {
+                    name: 'name'
+                },
+                imagePreview: `https://i.stack.imgur.com/l60Hf.png`
+            })
+        }
     }, [profileData])
-
 
 
     return (
         <div className={classes.root}>
             {!isEdit && <EditIcon className={classes.cardItemButtonsEdit} onClick={toggleIsEdit}/>}
             {isEdit && <span className={classes.cardItemButtonsCloseEdit} onClick={toggleIsEdit}>X</span>}
-            <h3  className={classes.title}>Профиль</h3>
-            <div  className={classes.info}>
-            {!isEdit && (<>
-                <img  className={classes.profileImg} src={`${BASE_URL}${profileData?.photo}`} alt='Phot'/>
-                <span  className={classes.text}>Имя: {profileData?.name}</span>
-                <span  className={classes.text}>Почта: {profileData?.email}</span>
-                <span  className={classes.text}>Телефон: {profileData?.phone}</span>
-                <Button onClick={() => history.push('my-orders')} className={classes.button} color='primary' variant="contained">Мои покупки</Button>
-                <Button onClick={() => history.push('my-products')} className={classes.button} color='primary' variant="contained">Мои продукты</Button>
-                <Button onClick={() => history.push('my-auctions')} className={classes.button} color='primary' variant="contained">Мои аукционы</Button>
+            <h3 className={classes.title}>Профиль</h3>
+            <div className={classes.info}>
+                {!isEdit && (<>
+                    <img className={classes.profileImg} src={`${img.imagePreview}`} alt='Phot'/>
+                    <span className={classes.text}>Имя: {profileData?.name}</span>
+                    <span className={classes.text}>Почта: {profileData?.email}</span>
+                    <span className={classes.text}>Телефон: {profileData?.phone}</span>
+                    <Button onClick={() => history.push('my-orders')} className={classes.button} color='primary'
+                            variant="contained">Мои покупки</Button>
+                    <Button onClick={() => history.push('my-products')} className={classes.button} color='primary'
+                            variant="contained">Мои продукты</Button>
+                    <Button onClick={() => history.push('my-auctions')} className={classes.button} color='primary'
+                            variant="contained">Мои аукционы</Button>
                 </>)}
-            {isEdit && ( 
-                <form onSubmit={onSubmit} className={classes.form}>
-                    <div className={classes.imgInputContainer}>
-                        <label htmlFor='file' className={classes.imgInputLabel}>
-                            <Button color='secondary' variant="contained">Загрузите картинку</Button>
-                        </label>
-                        <input  className={classes.inputFile}  id='file' type='file' onChange={imageHandler} >
-                        </input>
-                    </div>
-                    {img.imagePreview && (  
-                        <div className={classes.imgPreview}>
-                            <img className={classes.img} src={img.imagePreview} alt="" />
-                            <span className="image-name">
+                {isEdit && (
+                    <form onSubmit={onSubmit} className={classes.form}>
+                        <div className={classes.imgInputContainer}>
+                            <label htmlFor='file' className={classes.imgInputLabel}>
+                                <Button color='secondary' variant="contained">Загрузите картинку</Button>
+                            </label>
+                            <input className={classes.inputFile} id='file' type='file' onChange={imageHandler}>
+                            </input>
+                        </div>
+                        {img.imagePreview && (
+                            <div className={classes.imgPreview}>
+                                <img className={classes.img} src={`${img.imagePreview}`} alt=""/>
+                                <span className="image-name">
                                 {img?.image?.name}
                             </span>
-                            <span className={classes.imgPreviewClose} onClick={(e) => removeImage(e)}>X</span>
+                                <span className={classes.imgPreviewClose} onClick={(e) => removeImage(e)}>X</span>
+                            </div>
+                        )}
+                        <Input className={classes.input} value={formValue.name} placeholder="Имя" name='name'
+                               type="text" onChange={onChange} required/>
+                        <Input className={classes.input} value={formValue.email} placeholder="Описание" name='email'
+                               type="text" onChange={onChange} required/>
+                        <Input
+                            value={formValue.phone}
+                            name='phone'
+                            type="tel"
+                            placeholder="Телефон"
+                            className={classes.input}
+                            pattern="[0-9]{3} [0-9]{3} [0-9]{4}"
+                            onChange={onChange}
+                            required
+                        />
+                        <div className={classes.cardButtons}>
+                            <Button variant="contained" type='submit' color='primary'>Отправить</Button>
+                            <Button variant="contained">Отмена</Button>
                         </div>
-                    )}
-                    <Input className={classes.input} value={formValue.name} placeholder="Имя" name='name' type="text" onChange={onChange}  required />
-                    <Input className={classes.input} value={formValue.email} placeholder="Описание" name='email' type="text" onChange={onChange} required  />
-					<Input
-						value={formValue.phone}
-						name='phone'
-						type="tel"
-						placeholder="Телефон"
-						className={classes.input}
-						pattern="[0-9]{3} [0-9]{3} [0-9]{4}"
-						onChange={onChange}
-						required
-					/>
-                    <div className={classes.cardButtons}>
-                        <Button  variant="contained" type='submit' color='primary'>Отправить</Button>
-                        <Button  variant="contained">Отмена</Button>
-                    </div>
-                    <div className={classes.error}>
-                    <ul>
-                        {error &&
-                        (Array.isArray(error) ? error.map(err => <li key={err}
-                                                                     className={classes.errorText}>{err}</li>) :
-                            <li className={classes.errorText}>{error}</li>)
-                        }
-                    </ul>
-                </div>
-                </form>
-            )}
+                        <div className={classes.error}>
+                            <ul>
+                                {error &&
+                                (Array.isArray(error) ? error.map(err => <li key={err}
+                                                                             className={classes.errorText}>{err}</li>) :
+                                    <li className={classes.errorText}>{error}</li>)
+                                }
+                            </ul>
+                        </div>
+                    </form>
+                )}
             </div>
         </div>
     )

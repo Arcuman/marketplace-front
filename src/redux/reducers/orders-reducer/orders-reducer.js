@@ -1,4 +1,13 @@
-import { SEND_ORDER_SUCCESS, SEND_ORDER_FAIL, FETCH_ORDERS_SUCCESS, FETCH_ORDERS_FAIL ,FETCH_ORDER_SUCCESS, FETCH_ORDER_FAIL  } from '../../constants/orders'
+import {
+    SEND_ORDER_SUCCESS,
+    SEND_ORDER_FAIL,
+    FETCH_ORDERS_SUCCESS,
+    FETCH_ORDERS_FAIL,
+    FETCH_ORDER_SUCCESS,
+    FETCH_ORDER_FAIL,
+    UPDATE_ORDER_SUCCESS
+} from '../../constants/orders'
+import { UPDATE_PROFILE_FAIL} from "../../constants/profile";
 
 const initialState = {
     orders: [],
@@ -42,7 +51,17 @@ const ordersReducer = (state = initialState, action) => {
             return {
                 ...state,
                 errorMessage: action.payload,
-            }; 
+            };
+        case UPDATE_ORDER_SUCCESS:
+            return {
+                ...state,
+                errorMessage: ''
+            };
+        case UPDATE_PROFILE_FAIL:
+            return {
+                ...state,
+                errorMessage: action.payload
+            }
         default:
             return state;
     }

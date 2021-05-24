@@ -90,16 +90,6 @@ export default function Auctions() {
                         <ViewIcon/>
                       </IconButton>
                     </NavLink>
-                    {/*{ auth.isAuthenticated().user && auth.isAuthenticated().user._id == auction.seller._id &&
-                    <>
-                        <Link to={"/auction/edit/" + auction._id}>
-                            <IconButton aria-label="Edit" color="primary">
-                                <Edit/>
-                            </IconButton>
-                        </Link>
-                        <DeleteAuction auction={auction} onRemove={props.removeAuction}/>
-                    </>
-                    }*/}
                 </ListItemSecondaryAction>
               </ListItem>
               <Divider/>

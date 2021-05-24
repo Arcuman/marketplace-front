@@ -1,12 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { createStyles, makeStyles, Button } from '@material-ui/core';
 import { useEffect } from 'react';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 import {BASE_URL} from '../../constants/constants'
 import { useHistory } from 'react-router';
 import { fetchAuctions } from '../../redux/actions/myAuctions';
+import ViewIcon from "@material-ui/icons/Visibility";
 
 const useStyles = makeStyles((theme) =>
 	createStyles({
@@ -45,6 +44,10 @@ const useStyles = makeStyles((theme) =>
             alignItems: 'center',
             justifyContent: 'space-between',
             backgroundColor: '#ffffff',
+            '&:hover':{
+                cursor: 'pointer',
+                boxShadow: '0px 10px 8px 0px rgba(50, 50, 50, 0.25)',
+            }
         },
         cardItemImg: {
             width: '30%',
@@ -102,7 +105,7 @@ export default function MyAuctions(){
             {auctions && !auctions.length && <h1 style={{margin: '40px'}}>Нету аукционов</h1>}
             <div className={classes.cardItemsContainer}>
                 {auctions.map(auction => (
-                    <div key={auction.id} className={classes.cardItem}>
+                    <div key={auction.id} className={classes.cardItem} onClick={() => history.push(`/auctions/${auction.id}`)}>
                         <div style={{display: 'flex', alignItems: 'center'}}>
                             <img  className={classes.cardItemImg} src={`${BASE_URL}${auction.photo}`} alt=''/>
                             <div className={classes.cardItemInfo}>
@@ -113,8 +116,7 @@ export default function MyAuctions(){
                             </div>
                         </div>
                         <div className={classes.cardItemButtons}>
-                            <EditIcon className={classes.cardItemButtonsEdit}/>
-                            <DeleteIcon style={{color: 'red'}}/>
+                            <ViewIcon className={classes.cardItemButtonsEdit}/>
                         </div>
                     </div>
                 ))}

@@ -2,11 +2,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts } from '../../redux/actions/productsActions';
 import { createStyles, makeStyles, Button } from '@material-ui/core';
 import { useEffect } from 'react';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 import {BASE_URL} from '../../constants/constants'
 import { useHistory } from 'react-router';
+import ViewIcon from "@material-ui/icons/Visibility";
 
 const useStyles = makeStyles((theme) =>
 	createStyles({
@@ -67,11 +66,16 @@ const useStyles = makeStyles((theme) =>
             fontWeight: 500
         },
         cardItemButtons: {
-            display: 'flex'
+            display: 'flex',
+            '&:hover':{
+                cursor: 'pointer',
+                boxShadow: '0px 10px 8px 0px rgba(50, 50, 50, 0.25)',
+            }
         },
         cardItemButtonsEdit: {
             color: 'blue', 
-            marginRight: '10px'
+            marginRight: '10px',
+
         }
     })
 )
@@ -105,8 +109,7 @@ export default function Products(){
                             </div>
                         </div>
                         <div className={classes.cardItemButtons}>
-                            <EditIcon className={classes.cardItemButtonsEdit}/>
-                            <DeleteIcon style={{color: 'red'}}/>
+                            <ViewIcon className={classes.cardItemButtonsEdit}/>
                         </div>
                     </div>
                 ))}

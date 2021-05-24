@@ -22,7 +22,6 @@ export default function RootRouter() {
 		<main>
 			<BrowserRouter>
 				<Route component={Nav} path="*" />
-
 				<NotAuthedPrivateRoute component={LogIn} path="/log-in" exact/>
 				<NotAuthedPrivateRoute component={SignUp} path="/sign-up" exact/>
 				<Route component={Auctions} path="/auctions" exact/>
@@ -30,13 +29,13 @@ export default function RootRouter() {
 				<Route component={Catalog} path='/catalog' exact/>
 				<Route component={Product} path='/product/:id' exact/>
 				<Route component={Basket} path='/basket'/>
-				<Route component={Products} path='/my-products'/>
-				<Route component={NewProduct} path='/new-product'/>
-				<Route component={Orders} path='/my-orders'/>
-				<Route component={Profile} path='/my-profile'/>
-				<Route component={OrderDetails} path='/order-details/:id'/>
-				<Route component={MyAuctions} path='/my-auctions'/>
-                <Route component={NewAuction} path='/new-auction'/>
+				<AuthedPrivateRoute component={Products} path='/my-products' exact/>
+				<AuthedPrivateRoute component={NewProduct} path='/new-product' exact/>
+				<AuthedPrivateRoute component={Orders} path='/my-orders' exact/>
+				<AuthedPrivateRoute component={Profile} path='/my-profile' exact/>
+				<AuthedPrivateRoute component={OrderDetails} path='/order-details/:id' exact/>
+				<AuthedPrivateRoute component={MyAuctions} path='/my-auctions' exact/>
+                <AuthedPrivateRoute component={NewAuction} path='/new-auction' exact/>
 
                 <Route exact path="/" render={() => (
                     <Redirect to="/catalog"/>

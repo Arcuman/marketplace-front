@@ -118,14 +118,18 @@ export default function NewAuction(){
 		if(e.target.files[0]){
             let reader = new FileReader();
             let newFile = e.target.files[0];
-            reader.readAsDataURL(newFile);
 
+            setImg({
+                image: newFile,
+                imagePreview: null
+            })
             reader.onloadend = () => {
                 setImg({
                     image: newFile,
                     imagePreview: reader.result
                 })
             };
+            reader.readAsDataURL(newFile);
         }
 
         else {

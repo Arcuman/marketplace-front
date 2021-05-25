@@ -1,12 +1,12 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { createProduct } from '../../redux/actions/productsActions';
-import { createStyles, makeStyles, Button, Input } from '@material-ui/core';
-import { useRef, useState } from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {createProduct} from '../../redux/actions/productsActions';
+import {createStyles, makeStyles, Button, Input} from '@material-ui/core';
+import {useRef, useState} from 'react';
 
-import { useHistory } from 'react-router';
+import {useHistory} from 'react-router';
 
 const useStyles = makeStyles((theme) =>
-	createStyles({
+    createStyles({
         root: {
             width: '60%',
             boxShadow: '0px 10px 8px 0px rgba(50, 50, 50, 0.25)',
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) =>
             top: '0',
             zIndex: 1
         },
-        imgPreview:{
+        imgPreview: {
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -83,13 +83,13 @@ const useStyles = makeStyles((theme) =>
     })
 )
 
-export default function NewProduct(){
+export default function NewProduct() {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
     const form = useRef(null)
     const error = useSelector((store) => store.userProducts.errorMessage)
-    
+
     const [formValue, setFormValue] = useState({
         name: '',
         description: '',
@@ -98,53 +98,60 @@ export default function NewProduct(){
     })
     const [img, setImg] = useState({
         image: null,
+    })
+    const [imagePreview, setImagePreview] = useState({
         imagePreview: null
     })
-    
+
     const onChange = (e) => {
-		setFormValue((prev) => {
-			return {
-				...prev,
-				[e.target.name]: e.target.value
-			}
-		})
-	}
+        setFormValue((prev) => {
+            return {
+                ...prev,
+                [e.target.name]: e.target.value
+            }
+        })
+    }
 
     const imageHandler = (e) => {
-		if(e.target.files[0]){
+        console.log(e.target.files)
+        if (e.target.files[0]) {
             let reader = new FileReader();
             let newFile = e.target.files[0];
-            reader.readAsDataURL(newFile);
-
+            setImg({
+                image: newFile,
+                imagePreview: null
+            })
             reader.onloadend = () => {
                 setImg({
                     image: newFile,
                     imagePreview: reader.result
                 })
             };
-        }
-
-        else {
+            reader.readAsDataURL(newFile);
+        } else {
             removeImage();
         }
-	};
+    };
 
     const removeImage = (e) => {
-		e.stopPropagation();
-		e.preventDefault();
+        e.stopPropagation();
+        e.preventDefault();
+        setImg({
+            image: null,
+            imagePreview: null
+        });
+    };
 
-		setImg({
-			image: null,
-			imagePreview: null
-		});
-	};
-
-    function clearForm(){
+    function clearForm() {
         setFormValue({
             name: '',
             description: '',
             quantity: '',
             price: 0
+        });
+        setImg({
+            image: null,
+            imagePreview: null
         });
     }
 
@@ -152,11 +159,11 @@ export default function NewProduct(){
     const onSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
-
+        console.log(img.image)
         const newProduct = {
-            ...formValue, photo : img.image
+            ...formValue, photo: img.image
         }
-
+        console.log()
         for (const key in newProduct) {
             formData.append(key, newProduct[key]);
         }
@@ -171,32 +178,37 @@ export default function NewProduct(){
     }
 
     return (
-        <div  className={classes.root}>
+        <div className={classes.root}>
             <h3 style={{textAlign: 'center'}}>Новый Продукт</h3>
             <form id='form' ref={form} className={classes.form} onSubmit={onSubmit}>
                 <div className={classes.imgInputContainer}>
                     <label htmlFor='file' className={classes.imgInputLabel}>
                         <Button color='secondary' variant="contained">Загрузите картинку</Button>
                     </label>
-                    <input  className={classes.inputFile}  id='file' type='file' onChange={imageHandler} placeholder='Загрузите картинку' required >
+                    <input className={classes.inputFile} id='file' type='file' onChange={(e) => imageHandler(e)}
+                           placeholder='Загрузите картинку' required>
                     </input>
                 </div>
-                {img.imagePreview && (  
-                        <div className={classes.imgPreview}>
-                            <img className={classes.img} src={img.imagePreview} alt="" />
-                            <span className="image-name">
+                {img.imagePreview && (
+                    <div className={classes.imgPreview}>
+                        <img className={classes.img} src={img.imagePreview} alt=""/>
+                        <span className="image-name">
                                 {img.image.name.slice(0, 8)}
                             </span>
-                            <span className={classes.imgPreviewClose} onClick={(e) => removeImage(e)}>X</span>
-                        </div>
-                    )}
-                <Input className={classes.input} value={formValue.name} placeholder="Имя" name='name' type="text" onChange={onChange}  required />
-                <Input className={classes.input} value={formValue.description} placeholder="Описание" name='description' type="text" onChange={onChange} required  />
-                <Input className={classes.input} value={formValue.quantity} placeholder="Количество" name='quantity' type="number" onChange={onChange} required  />
-                <Input className={classes.input} value={formValue.price} placeholder="Цена" min={0} name='price' type="number" onChange={onChange} required  />
+                        <span className={classes.imgPreviewClose} onClick={(e) => removeImage(e)}>X</span>
+                    </div>
+                )}
+                <Input className={classes.input} value={formValue.name} placeholder="Имя" name='name' type="text"
+                       onChange={onChange} required/>
+                <Input className={classes.input} value={formValue.description} placeholder="Описание" name='description'
+                       type="text" onChange={onChange} required/>
+                <Input className={classes.input} value={formValue.quantity} placeholder="Количество" name='quantity'
+                       type="number" onChange={onChange} required/>
+                <Input className={classes.input} value={formValue.price} placeholder="Цена" min={0} name='price'
+                       type="number" onChange={onChange} required/>
                 <div className={classes.cardButtons}>
-                    <Button  variant="contained" type='submit' color='primary'>Отправить</Button>
-                    <Button  variant="contained">Отмена</Button>
+                    <Button variant="contained" type='submit' color='primary'>Отправить</Button>
+                    <Button variant="contained">Отмена</Button>
                 </div>
                 <div className={classes.error}>
                     <ul>

@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) =>
             top: '50%',
             transform: 'translateY(-50%)',
             left: 0,
+            maxHeight: '180px',
             zIndex: 1
         },
         bottomLine: {

@@ -108,9 +108,6 @@ export default function Products(){
                                 <span className={classes.cardItemQuantity}>Количество: {product.quantity} | Цена: ${product.price}</span>
                             </div>
                         </div>
-                        <div className={classes.cardItemButtons}>
-                            <ViewIcon className={classes.cardItemButtonsEdit}/>
-                        </div>
                     </div>
                 ))}
             </div>

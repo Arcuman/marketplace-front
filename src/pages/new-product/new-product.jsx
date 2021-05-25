@@ -99,9 +99,6 @@ export default function NewProduct() {
     const [img, setImg] = useState({
         image: null,
     })
-    const [imagePreview, setImagePreview] = useState({
-        imagePreview: null
-    })
 
     const onChange = (e) => {
         setFormValue((prev) => {

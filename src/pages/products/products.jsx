@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 
 import {BASE_URL} from '../../constants/constants'
 import { useHistory } from 'react-router';
-import ViewIcon from "@material-ui/icons/Visibility";
 
 const useStyles = makeStyles((theme) =>
 	createStyles({

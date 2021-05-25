@@ -167,9 +167,8 @@ export default function NewAuction(){
     const onSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
-
         const newProduct = {
-            ...formValue, photo : img.image
+            ...formValue, photo : img.image,
         }
 
         for (const key in newProduct) {

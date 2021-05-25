@@ -33,13 +33,18 @@ const calculateTimeLeft = (date) => {
 }
 export default function Timer(props) {
     const classes = useStyles()
-    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(new Date(props.endTime)))
+    const getLocalDate = (bidDate) => {
+        const date = new Date(bidDate);
+        const hours = date.getHours() - 3;
+        return date.setHours(hours);
+    }
+    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(getLocalDate(props.endTime)))
 
     useEffect(() => {
         let timer = null
         if (!timeLeft.timeEnd) {
             timer = setTimeout(() => {
-                setTimeLeft(calculateTimeLeft(new Date(props.endTime)))
+                setTimeLeft(calculateTimeLeft(getLocalDate(props.endTime)))
             }, 1000)
         } else {
             props.update()
@@ -54,8 +59,8 @@ export default function Timer(props) {
                     {timeLeft.hours !== 0 && `${timeLeft.hours} ч `}
                     {timeLeft.minutes !== 0 && `${timeLeft.minutes} м `}
                     {timeLeft.seconds !== 0 && `${timeLeft.seconds} с`} осталось <span
-                    className={classes.endTime}>{`(закончится ${new Date(props.endTime).toLocaleString()})`}</span></Typography> :
-                <Typography component="p" variant="h6">Auction ended</Typography>}
+                    className={classes.endTime}>{`(закончится ${ new Date((getLocalDate(props.endTime))).toLocaleString()})`}</span></Typography> :
+                <Typography component="p" variant="h6">Аукцион закончился</Typography>}
         </div>
     )
 }

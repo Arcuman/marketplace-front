@@ -42,6 +42,7 @@ const useStyles = makeStyles(theme => ({
         height: 300,
         display: 'inline-block',
         width: '100%',
+        objectFit: 'contain',
     },
     icon: {
         verticalAlign: 'sub'
@@ -73,7 +74,7 @@ const Auction = () => {
     // const storeError = useSelector((store) => store.auctions.error);
 
     useEffect(() => {
-        console.log(storeAuction)
+        setJustEnded(false);
         if (!storeAuction) {
             console.log('id' + params.id)
             dispatch(auctionReq(params.id))
@@ -92,7 +93,16 @@ const Auction = () => {
         setJustEnded(true)
     }
 
+    const getLocalDate = (bidDate) => {
+        const date = new Date(bidDate);
+        const hours = date.getHours() - 3;
+        console.log( new Date(date.setHours(hours)));
+        return date.setHours(hours);
+    }
+
     const currentDate = new Date()
+
+    console.log(currentDate)
     return (
         <div className={classes.root}>
             {storeAuction &&
@@ -100,9 +110,9 @@ const Auction = () => {
                 <CardHeader
                     title={storeAuction.name}
                     subheader={<span>
-                    {currentDate < new Date(storeAuction.bidStart) && 'Аукцион не начался'}
-                        {currentDate > new Date(storeAuction.bidStart) && currentDate < new Date(storeAuction.bidEnd) && 'Аукцион идет'}
-                        {currentDate > new Date(storeAuction.bidEnd) && 'Аукцион закончился'}
+                    {currentDate < getLocalDate(storeAuction.bidStart) && 'Аукцион не начался'}
+                        {currentDate > getLocalDate(storeAuction.bidStart) && currentDate < getLocalDate(storeAuction.bidEnd) && 'Аукцион идет'}
+                        {currentDate > getLocalDate(storeAuction.bidEnd) && 'Аукцион закончился'}
                     </span>}
                 />
                 <Grid container spacing={6}>
@@ -119,7 +129,7 @@ const Auction = () => {
                     </Grid>
 
                     <Grid item xs={7} sm={7}>
-                        {currentDate > new Date(storeAuction.bidStart)
+                        {currentDate > getLocalDate(storeAuction.bidStart)
                             ? (<>
                                 <Timer endTime={storeAuction.bidEnd} update={update}/>
                                 {storeAuction.bids.length > 0 &&
@@ -133,7 +143,7 @@ const Auction = () => {
                                 <AuctionBid auction={storeAuction} justEnded={justEnded} updateBids={updateBids}/>}
                             </>)
                             : <Typography component="p"
-                                          variant="h6">{`Аукцион начнется в ${new Date(storeAuction.bidStart).toLocaleString()}`}</Typography>}
+                                          variant="h6">{`Аукцион начнется в ${storeAuction.bidStart.toLocaleString()}`}</Typography>}
                     </Grid>
 
                 </Grid>

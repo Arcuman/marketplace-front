@@ -64,8 +64,9 @@ const useStyles = makeStyles((theme) =>
         },
         orderItemImg: {
             width: '30%',
-            objectFit: 'cover',
+            objectFit: 'contain',
             marginRight: "20px",
+            maxHeight: '150px'
         },
         orderItemInfo: {
             display: 'flex',

@@ -51,6 +51,13 @@ function AuctionBid(props) {
         setBid(event.target.value)
     }
 
+    const getLocalDate = (bidDate) => {
+        const date = new Date(bidDate);
+        const hours = date.getHours() - 3;
+        console.log( new Date(date.setHours(hours)));
+        return date.setHours(hours);
+    }
+
     const placeBid = () => {
         let newBid = {
             auctionId: props.auction.id,
@@ -67,7 +74,7 @@ function AuctionBid(props) {
     const minBid = props.auction.bids && props.auction.bids.length > 0 ? props.auction.bids[0].bid : props.auction.price
     return (
         <div>
-            {!props.justEnded && new Date() < new Date(props.auction.bidEnd) && <div className={classes.placeForm}>
+            {!props.justEnded && new Date() < getLocalDate(props.auction.bidEnd) && <div className={classes.placeForm}>
                 <TextField id="bid" label="Ваша ставка ($)"
                            value={bid} onChange={handleChange}
                            type="number" margin="normal"

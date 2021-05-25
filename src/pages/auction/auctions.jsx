@@ -55,10 +55,10 @@ export default function Auctions() {
     const auctionState = (auction) => {
         return (
             <span>
-          {currentDate < new Date(auction.bidStart) && `Аукцион начнется ${new Date(auction.bidStart).toLocaleString()}`}
-                {currentDate > new Date(auction.bidStart) && currentDate < new Date(auction.bidEnd) && <>{`Аукцион идет | кол-во ставок: ${auction.bids.length || 0} |`} {showTimeLeft(new Date(auction.bidEnd))}</>}
-                {currentDate > new Date(auction.bidEnd) && `Аукцион закончится | кол-во ставок: ${auction.bids?.length || 0}  `}
-                {currentDate > new Date(auction.bidStart) && auction.bids?.length > 0 && ` | Последняя ставка : $ ${auction.bids[auction.bids.length - 1].bid}`}
+          {currentDate < getLocalDate(auction.bidStart) && `Аукцион начнется ${new Date(getLocalDate(auction.bidStart)).toLocaleString()}`}
+                {currentDate > getLocalDate(auction.bidStart) && currentDate < getLocalDate(auction.bidEnd) && <>{`Аукцион идет | кол-во ставок: ${auction.bids.length || 0} |`} {showTimeLeft(getLocalDate(auction.bidEnd))}</>}
+                {currentDate > getLocalDate(auction.bidEnd) && `Аукцион закончился | кол-во ставок: ${auction.bids?.length || 0}  `}
+                {currentDate > getLocalDate(auction.bidStart) && auction.bids?.length > 0 && ` | Последняя ставка : $ ${auction.bids[auction.bids.length - 1].bid}`}
       </span>
         )
     }
@@ -67,7 +67,12 @@ export default function Auctions() {
     const dispatch = useDispatch();
     // const auctionStoreError = useSelector((store) => store.auctions.error);
     const auctions = useSelector((store) => store.auctions.auctions);
-    console.log({auctions})
+    const getLocalDate = (bidDate) => {
+        const date = new Date(bidDate);
+        const hours = date.getHours() - 3;
+        console.log( new Date(date.setHours(hours)));
+        return date.setHours(hours);
+    }
     useEffect(() => {
         if (!auctions.length) {
             dispatch(getAllAuctions());

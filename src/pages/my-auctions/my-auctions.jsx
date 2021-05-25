@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) =>
         },
         cardItemImg: {
             width: '30%',
-            objectFit: 'cover',
+            objectFit: 'contain',
             marginRight: '10px',
             maxHeight: '180px'
         },

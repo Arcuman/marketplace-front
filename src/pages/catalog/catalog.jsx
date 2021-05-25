@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) =>
         },
         productImg: {
             width: '100%',
-            objectFit: 'cover',
+            objectFit: 'contain',
             position: 'absolute',
             top: '50%',
             transform: 'translateY(-50%)',

@@ -48,14 +48,15 @@ const useStyles = makeStyles((theme) =>
         },
         cardItemImg: {
             width: '30%',
-            objectFit: 'cover',
-            marginRight: '10px'
+            objectFit: 'contain',
+            maxHeight: '200px',
+            marginRight: '20px'
         },
         cardItemInfo: {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'flex-start',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
         },
         cardItemInfoName:{
             color: 'blue',

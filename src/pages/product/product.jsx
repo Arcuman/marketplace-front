@@ -48,8 +48,9 @@ const useStyles = makeStyles((theme) =>
         },
         cardImg: {
             width: '100%',
-            objectFit: 'cover',
+            objectFit: 'fill',
             marginTop: '20px',
+            maxHeight: '400px'
         },
         cardBottom: {
             width: '100%',

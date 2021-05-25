@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) =>
             width: '40%',
             maxWidth: '250px',
             maxHeight: '200px',
-            objectFit: 'cover'
+            objectFit: 'contain'
         },
         imgPreviewClose: {
             position: 'absolute',
@@ -202,10 +202,9 @@ export default function NewAuction(){
                     )}
                 <Input className={classes.input} value={formValue.name} placeholder="Имя" name='name' type="text" onChange={onChange}  required />
                 <Input className={classes.input} value={formValue.description} placeholder="Описание" name='description' type="text" onChange={onChange} required  />
-                <Input className={classes.input} value={formValue.quantity} placeholder="Количество" name='quantity' type="number" onChange={onChange} required  />
                 <Input className={classes.input} value={formValue.price} placeholder="Цена" min={0} name='price' type="number" onChange={onChange} required  />
-                <Input className={classes.input} value={formValue.bidStart} placeholder="Начало аукциона" min={0} name='bidStart' type="date" onChange={onChange} required  />
-                <Input className={classes.input} value={formValue.bidEnd} placeholder="Конец аукциона" min={0} name='bidEnd' type="date" onChange={onChange} required  />
+                <Input className={classes.input} value={formValue.bidStart} placeholder="Начало аукциона" min={0} name='bidStart' type="datetime-local" onChange={onChange} required  />
+                <Input className={classes.input} value={formValue.bidEnd} placeholder="Конец аукциона" min={0} name='bidEnd' type="datetime-local" onChange={onChange} required  />
                 <div className={classes.cardButtons}>
                     <Button  variant="contained" type='submit' color='primary'>Отправить</Button>
                     <Button  variant="contained">Отмена</Button>

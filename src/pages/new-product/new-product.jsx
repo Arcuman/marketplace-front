@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) =>
             width: '40%',
             maxWidth: '250px',
             maxHeight: '200px',
-            objectFit: 'cover'
+            objectFit: 'contain'
         },
         imgPreviewClose: {
             position: 'absolute',
@@ -158,20 +158,14 @@ export default function NewProduct() {
         const formData = new FormData();
         console.log(img.image)
         const newProduct = {
-            ...formValue, photo: img.image
+            ...formValue, photo: Object.assign(img.image)
         }
-        console.log()
+        console.log(newProduct)
         for (const key in newProduct) {
             formData.append(key, newProduct[key]);
         }
 
         dispatch(createProduct(formData, history, clearForm));
-
-        setImg({
-            image: null,
-            imagePreview: null
-        })
-
     }
 
     return (
